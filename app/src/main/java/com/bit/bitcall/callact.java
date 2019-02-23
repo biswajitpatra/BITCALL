@@ -12,15 +12,18 @@ import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
-public class callact extends AppCompatActivity{
+public class callact extends AppCompatActivity implements TextToSpeech.OnInitListener,TextToSpeech.OnUtteranceCompletedListener{
     private final int REQ_CODE_SPEECH_INPUT = 100;
     String data,conc;
     TextToSpeech tts;
-    String text;
+    String userin="";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,26 +38,12 @@ public class callact extends AppCompatActivity{
         mobilemode.setStreamVolume(AudioManager.STREAM_RING,0,0);
 
 
-        tts=new TextToSpeech(callact.this, new TextToSpeech.OnInitListener() {
-
-            @Override
-            public void onInit(int status) {
-                // TODO Auto-generated method stub
-                if(status == TextToSpeech.SUCCESS){
-                    int result=tts.setLanguage(Locale.US);
-                    if(result==TextToSpeech.LANG_MISSING_DATA ||
-                            result==TextToSpeech.LANG_NOT_SUPPORTED){
-                        Log.e("error", "This Language is not supported");
-                    }
-                    else{
-                        ConvertTextToSpeech();
-                    }
-                }
-                else
-                    Log.e("error", "Initilization Failed!");
-            }
-        });
-
+        tts=new TextToSpeech(this,this);
+        tts.setSpeechRate(0.5f);
+        ConvertTextToSpeech("Biswajit u got a call from "+conc+"     Would you like to accept or reject");
+        while(tts.isSpeaking());
+        for(int i=0;i<=20000;i++);
+        promptSpeechInput();
         //tts.setLanguage(Locale.US);
         //tts.speak("Text to say aloud", TextToSpeech.QUEUE_ADD, null);
 
@@ -78,9 +67,8 @@ public class callact extends AppCompatActivity{
                     Toast.LENGTH_SHORT).show();
         }
     }
-    private void ConvertTextToSpeech() {
+    private void ConvertTextToSpeech(String text) {
         // TODO Auto-generated method stub
-        text = conc;
         if(text==null||"".equals(text))
         {
             text = "Content not available";
@@ -89,7 +77,7 @@ public class callact extends AppCompatActivity{
             tts.speak("Biswajit u got a call from "+text+"     Would you like to accept or reject", TextToSpeech.QUEUE_FLUSH, null);
 
     }
-
+/*
     @Override
     protected void onPause() {
         // TODO Auto-generated method stub
@@ -101,8 +89,8 @@ public class callact extends AppCompatActivity{
         }
         super.onPause();
     }
-    
 
+*/
     public String getContactName(final String phoneNumber, Context context)
     {
         Uri uri=Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,Uri.encode(phoneNumber));
@@ -122,5 +110,43 @@ public class callact extends AppCompatActivity{
         return contactName;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    userin=result.get(0);
+                }
+                break;
+            }
+
+        }
+    }
+
+    @Override
+    public void onInit(int status) {
+        if(status == TextToSpeech.SUCCESS){
+            int result=tts.setLanguage(Locale.getDefault());
+            if(result==TextToSpeech.LANG_MISSING_DATA ||
+                    result==TextToSpeech.LANG_NOT_SUPPORTED){
+                Log.e("error", "This Language is not supported");
+            }
+            else{
+                ConvertTextToSpeech("START");
+            }
+        }
+        else
+            Log.e("error", "Initilization Failed!");
+    }
+
+    @Override
+    public void onUtteranceCompleted(String utteranceId) {
+
+    }
 }
+
