@@ -29,9 +29,9 @@ public class callrecei extends BroadcastReceiver {
                 String phoneNumber = extras
                         .getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
                 Log.e("MY_DEBUG_TAG:::", phoneNumber);
-                Intent i = new Intent(context, mainserv.class);
+                Intent i = new Intent(context, callact.class);
                 i.putExtra("NUM",phoneNumber);
-                context.startForegroundService(i);
+                context.startActivity(i);
             }
         }
 
