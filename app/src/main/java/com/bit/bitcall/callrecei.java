@@ -1,10 +1,13 @@
 package com.bit.bitcall;
 
+import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -14,6 +17,7 @@ public class callrecei extends BroadcastReceiver {
     private static boolean incomingFlag = false;
 
     private static String incoming_number = null;
+    @TargetApi(Build.VERSION_CODES.O)
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.e(":::","STARTED");
@@ -27,7 +31,7 @@ public class callrecei extends BroadcastReceiver {
                 Log.e("MY_DEBUG_TAG:::", phoneNumber);
                 Intent i = new Intent(context, mainserv.class);
                 i.putExtra("NUM",phoneNumber);
-                context.startService(i);
+                context.startForegroundService(i);
             }
         }
 
