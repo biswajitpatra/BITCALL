@@ -53,19 +53,6 @@ public class mainserv extends Service implements TextToSpeech.OnInitListener {
                   //mobilemode.setStreamVolume(AudioManager.STREAM_MUSIC,mobilemode.getStreamMaxVolume(AudioManager.STREAM_MUSIC),0);
                   //mobilemode.setStreamVolume(AudioManager.STREAM_RING,mobilemode.getStreamMaxVolume(AudioManager.STREAM_RING),0);
 
-
-
-                SpeechRecognitionListener h = new SpeechRecognitionListener();
-                mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-                mSpeechRecognizer.setRecognitionListener(h);
-                mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                Log.d("avail", " " + mSpeechRecognizer.isRecognitionAvailable(this));
-                if (mSpeechRecognizer.isRecognitionAvailable(this))
-                    Log.d("created", "onBeginingOfSpeech");
-                mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
-                        this.getPackageName());
                 mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
 
 
@@ -102,9 +89,25 @@ public class mainserv extends Service implements TextToSpeech.OnInitListener {
                 this  // OnInitListener
         );
         tts.setSpeechRate(0.5f);
+        /*
+        SpeechRecognitionListener h = new SpeechRecognitionListener();
+        mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        mSpeechRecognizer.setRecognitionListener(h);
+        mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        Log.d("avail", " " + mSpeechRecognizer.isRecognitionAvailable(this));
+        if (mSpeechRecognizer.isRecognitionAvailable(this))
+            Log.d("created", "onBeginingOfSpeech");
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
+                this.getPackageName());
         Log.v(TAG, "oncreate_service");
+*/
+
         super.onCreate();
     }
+
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
         data=(String) intent.getExtras().get("NUM");
